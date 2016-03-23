@@ -1,0 +1,18 @@
+{
+    "name": "vierbergenlars/authserver-client",
+    "require": {
+        "guzzlehttp/guzzle": "^6.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lars Vierbergen",
+            "email": "vierbergenlars@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "vierbergenlars\\Authserver\\Client\\": "src/"
+        }
+    }
+}
