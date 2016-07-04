@@ -44,12 +44,14 @@ abstract class AbstractRepository
      */
     public function findBy(array $properties)
     {
-        $uri = \GuzzleHttp\uri_template($this->getUriTemplate(), [
-            'query' => [
-                'q' => $properties,
-            ],
-            'per_page' => $this->limit,
-        ]);
+        $params = [];
+        if($properties) {
+            $params['query'] = [
+                'q' => $properties
+            ];
+        }
+        $params['per_page'] = $this->limit;
+        $uri = \GuzzleHttp\uri_template($this->getUriTemplate(), $params);
         $uri = $this->createUri($uri);
         return $this->createSet($uri);
     }

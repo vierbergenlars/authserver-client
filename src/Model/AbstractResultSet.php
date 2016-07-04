@@ -6,6 +6,8 @@ abstract class AbstractResultSet implements \Countable, \ArrayAccess, \Iterator
 {
     protected $items = [];
 
+    private $cached_objects = [];
+
     private $ptr = 0;
 
     private $total = null;
@@ -35,7 +37,9 @@ abstract class AbstractResultSet implements \Countable, \ArrayAccess, \Iterator
     {
         if(!$this->offsetExists($offset))
             throw new \OutOfBoundsException('The offset '.$offset.' does not exist.');
-        return $this->createObject($this->items[$offset]);
+        if(!isset($this->cached_objects[$offset]))
+            $this->cached_objects[$offset] = $this->createObject($this->items[$offset]);
+        return $this->cached_objects[$offset];
     }
 
     abstract protected function createObject(array $item);

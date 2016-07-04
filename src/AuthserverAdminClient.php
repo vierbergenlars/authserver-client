@@ -23,6 +23,8 @@ class AuthserverAdminClient
      */
     private $perPage = 100;
 
+    private $repositories = [];
+
     /**
      * AuthserverAdminClient constructor.
      * @param ClientInterface $client
@@ -50,9 +52,9 @@ class AuthserverAdminClient
 
         if(!isset($repositories[$class]))
             throw new \LogicException('There is no repository for '.$class);
-        if(!is_object($repositories[$class]))
-            $repositories[$class] = new $repositories[$class]($this->client, $this->perPage);
-        return $repositories[$class];
+        if(!isset($this->repositories[$class]))
+            $this->repositories[$class] = new $repositories[$class]($this->client, $this->perPage);
+        return $this->repositories[$class];
     }
 
     /**
