@@ -62,4 +62,12 @@ class Group
     {
         return new UserSet($this->_client, $this->_links['members']['href']);
     }
+
+    /**
+     * @return UserSet
+     */
+    public function getAllUsers()
+    {
+        return new UserSet($this->_client, $this->_links['members']['href'].'?all=1');
+    }
 }
