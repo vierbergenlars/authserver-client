@@ -3,11 +3,13 @@
 namespace vierbergenlars\Authserver\Client\Repository;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
 use vierbergenlars\Authserver\Client\Model\AbstractResultSet;
 use vierbergenlars\Authserver\Client\NonUniqueResultException;
+use vierbergenlars\Authserver\Client\NoResultException;
 
 abstract class AbstractRepository
 {
@@ -89,9 +91,17 @@ abstract class AbstractRepository
      */
     public function find($id)
     {
-        $url = \GuzzleHttp\uri_template($this->getUriTemplate(), ['id' => $id]);
-        $data = json_decode($this->client->request('GET', $this->createUri($url)), true);
-        return $this->createObject($data);
+        try {
+            $url = \GuzzleHttp\uri_template($this->getUriTemplate(), ['id' => $id]);
+            $response = $this->client->request('GET', $this->createUri($url));
+            $data = json_decode($response->getBody(), true);
+            return $this->createObject($data);
+        } catch(ClientException $ex) {
+            if($ex->getResponse()->getStatusCode() === 404) {
+                throw new NoResultException(sprintf('Could not find object with id %s', $id), 0, $ex);
+            }
+            throw $ex;
+        }
     }
 
     /**
