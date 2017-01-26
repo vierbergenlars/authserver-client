@@ -32,6 +32,6 @@ class GroupRepository extends AbstractRepository
      */
     protected function getUriTemplate()
     {
-        return 'admin/groups{/id}{?*query,per_page}';
+        return 'admin/groups{/id}{?query*,per_page}';
     }
 }
